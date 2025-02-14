@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger CI/CD when there's a push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger CI/CD on pull request targeting the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 1: Set up Python environment (if it's a Python project)
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Choose your Python version here
+
+    # Step 2: Install dependencies (this assumes there's a requirements.txt)
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+
+    # Step 3: Run Tests (unit tests, integration tests, etc.)
+    - name: Run Tests
+      run: |
+        python -m unittest discover -s tests
+
+    # Step 4: Build Docker image (if it's a Docker project)
+    - name: Build Docker Image
+      run: |
+        docker build . --file Dockerfile --tag username/repository:v2
+
+    # Step 5: Push Docker image to Docker Hub (if you're using Docker)
+    - name: Push Docker Image
+      env:
+        USER: ${{ secrets.DOCKER_USERNAME }}
+        PASS: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $USER -p $PASS
+        docker push username/repository:v2
+
+    # Step 6: Deploy to Staging (or production)
+    - name: Deploy to Staging
+      run: |
+        # Add deployment steps (e.g., deploy to server, Kubernetes, etc.)
+        # For example, SSH to a server and deploy the Docker image.
