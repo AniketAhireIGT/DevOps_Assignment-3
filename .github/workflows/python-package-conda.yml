@@ -19,6 +19,6 @@ jobs:
         USER: ${{ secrets.USER }}
         PASS: ${{ secrets.PASS }}   
       run: |        
-        docker build . --file dockerfile.dockerfile --tag aniketahire/devops-flask-webserver-assignment_3:v1
+        docker build . --file dockerfile --tag aniketahire/devops-flask-webserver-assignment_3:v1
         docker login -u $USER -p $PASS        
         docker push aniketahire/devops-flask-webserver-assignment_3:v1
