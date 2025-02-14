@@ -1,0 +1,3 @@
+Flask
+requests
+# Add other dependencies you need for your project
